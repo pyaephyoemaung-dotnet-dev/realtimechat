@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        #message {
+            width: 80%;
+            padding: 5px;
+        }
+
+        #send {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Real-Time Chat</h1>
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Type a message...">
+    <button id="send">Send</button>
+
+    <script>
+        var conn = new WebSocket('ws://localhost:8080');
+        var chat = document.getElementById('chat');
+        var messageInput = document.getElementById('message');
+        var sendButton = document.getElementById('send');
+
+        conn.onmessage = function (e)
+        {
+            var msg = document.createElement('div');
+            msg.textContent = e.data;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        };
+
+        sendButton.onclick = function ()
+        {
+            var msg = messageInput.value;
+            conn.send(msg);
+            messageInput.value = '';
+        };
+    </script>
+</body>
+
+</html>
